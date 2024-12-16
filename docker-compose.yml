@@ -1,26 +1,28 @@
-version: '3.4'
-
 services:
   osx:
-    container_name: docker-osx
-    build:
-      context: .
-      args:
-        - SIZE=200G
-        - VERSION=10.15.5
     image: sickcodes/docker-osx
     privileged: true
-    environment:
-      - DISPLAY=${DISPLAY:-:0.0}
-    network_mode: "host"
-    cap_add:
-      - ALL
+    devices: 
+      - /dev/kvm
+      - /dev/snd
+    ports:
+      - 50922:10022
     volumes:
-      - /tmp/.X11-unix:/tmp/.X11-unix
-      - /dev:/dev
-      - /lib/modules:/lib/modules
-      - docker-osx_data:/home
-
+      - $XDG_RUNTIME_DIR/$WAYLAND_DISPLAY:/tmp/$WAYLAND_DISPLAY
+    environment:
+      GENERATE_UNIQUE: true
+      RAM: 16
+      XDG_RUNTIME_DIR: /tmp
+      WAYLAND_DISPLAY: "${WAYLAND_DISPLAY:-wayland-0}"
+      QT_QPA_PLATFORM: wayland
+      GDK_BACKEND: wayland
+      CLUTTER_BACKEND: wayland
+      DISPLAY: ":1"
+      CPU: Haswell-noTSX
+      CPUID_FLAGS: 'kvm=on,vendor=GenuineIntel,+invtsc,vmware-cpuid-freq=on'
+      SHORTNAME: ventura
+      XDG_SESSION_TYPE: wayland
+      SIZE: 30G
 volumes:
   docker-osx_data:
     name: docker-osx_data
