@@ -9,6 +9,7 @@ services:
       - 50922:10022
     volumes:
       - $XDG_RUNTIME_DIR/$WAYLAND_DISPLAY:/tmp/$WAYLAND_DISPLAY
+      - /mnt/hdd/sync/gdrive:/mnt/hostshare
     environment:
       GENERATE_UNIQUE: true
       RAM: 16
@@ -23,6 +24,7 @@ services:
       SHORTNAME: ventura
       XDG_SESSION_TYPE: wayland
       SIZE: 30G
+      EXTRA: '-smp 16,sockets=8,cores=2 -virtfs local,path=/mnt/hostshare,mount_tag=hostshare,security_model=passthrough,id=hostshare'
 volumes:
   docker-osx_data:
     name: docker-osx_data
